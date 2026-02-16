@@ -93,7 +93,10 @@ const refs = {
   overlayTitle: document.getElementById('lockTitle'),
   overlayDescription: document.getElementById('lockDescription'),
   overlaySubmit: document.getElementById('lockSubmit'),
-  overlayConfirmRow: document.getElementById('lockConfirmRow')
+  overlayConfirmRow: document.getElementById('lockConfirmRow'),
+  frequencyList: document.getElementById('frequencyList'),
+  doNotMissList: document.getElementById('doNotMissList'),
+  commonlyMissedList: document.getElementById('commonlyMissedList')
 };
 
 refs.changePassword.disabled = true;
@@ -153,15 +156,21 @@ async function fetchSeedData() {
 
 function mapSeed(symptom) {
   const seed = seedData[symptom] || {};
+  const frequencyList = splitSeedList(seed.frequency ?? seed.common);
+  const doNotMissList = splitSeedList(seed.doNotMiss ?? seed.cantMiss);
+  const commonlyMissedList = splitSeedList(seed.commonlyMissed);
   return {
-    commonCauses: serializeSeedList(splitSeedList(seed.common)),
-    cantMiss: serializeSeedList(splitSeedList(seed.cantMiss)),
-    source: seed.source || 'University of Toronto Diagnostic Checklist'
+    commonCauses: serializeSeedList(frequencyList),
+    cantMiss: serializeSeedList(doNotMissList),
+    source: seed.source || 'University of Toronto Diagnostic Checklist',
+    frequencyList,
+    doNotMissList,
+    commonlyMissedList
   };
 }
 
 function newCard(symptom = '') {
-  const { commonCauses, cantMiss, source } = mapSeed(symptom);
+  const { commonCauses, cantMiss, source, frequencyList, doNotMissList, commonlyMissedList } = mapSeed(symptom);
   return {
     id: crypto.randomUUID(),
     symptom,
@@ -172,7 +181,10 @@ function newCard(symptom = '') {
     references: '',
     notes: '',
     lastReviewed: '',
-    source
+    source,
+    frequencyList,
+    doNotMissList,
+    commonlyMissedList
   };
 }
 
@@ -182,8 +194,11 @@ function applySeedDefaults() {
     if (!card.symptom) return;
     const seed = seedData[card.symptom];
     if (!seed) return;
-    const common = serializeSeedList(splitSeedList(seed.common));
-    const missing = serializeSeedList(splitSeedList(seed.cantMiss));
+    const frequencyList = splitSeedList(seed.frequency ?? seed.common);
+    const doNotMissList = splitSeedList(seed.doNotMiss ?? seed.cantMiss);
+    const commonlyMissedList = splitSeedList(seed.commonlyMissed);
+    const common = serializeSeedList(frequencyList);
+    const missing = serializeSeedList(doNotMissList);
     if (!card.commonCauses && common) {
       card.commonCauses = common;
       changed = true;
@@ -194,6 +209,15 @@ function applySeedDefaults() {
     }
     if (!card.source || card.source === 'University of Toronto Diagnostic Checklist') {
       card.source = seed.source || 'University of Toronto Diagnostic Checklist';
+    }
+    if (!Array.isArray(card.frequencyList) || !card.frequencyList.length) {
+      card.frequencyList = frequencyList.slice();
+    }
+    if (!Array.isArray(card.doNotMissList) || !card.doNotMissList.length) {
+      card.doNotMissList = doNotMissList.slice();
+    }
+    if (!Array.isArray(card.commonlyMissedList) || !card.commonlyMissedList.length) {
+      card.commonlyMissedList = commonlyMissedList.slice();
     }
   });
   if (changed) persist(cards);
@@ -270,6 +294,31 @@ function fillForm() {
 function render() {
   renderList();
   fillForm();
+  renderSeedLists();
+}
+
+function renderSeedLists() {
+  const card = currentCard();
+  const sections = [
+    { node: refs.frequencyList, entries: card?.frequencyList ?? [] },
+    { node: refs.doNotMissList, entries: card?.doNotMissList ?? [] },
+    { node: refs.commonlyMissedList, entries: card?.commonlyMissedList ?? [] }
+  ];
+  sections.forEach(({ node, entries }) => {
+    if (!node) return;
+    node.innerHTML = '';
+    if (!entries.length) {
+      const li = document.createElement('li');
+      li.textContent = 'No entries yet';
+      node.appendChild(li);
+      return;
+    }
+    entries.forEach((entry) => {
+      const li = document.createElement('li');
+      li.textContent = entry;
+      node.appendChild(li);
+    });
+  });
 }
 
 refs.searchInput.addEventListener('input', () => {
