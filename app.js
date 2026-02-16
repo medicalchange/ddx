@@ -101,6 +101,8 @@ const refs = {
 
 refs.changePassword.disabled = true;
 
+const DEFAULT_PASSWORD_HASH = '064d035a74c47768db2c82167e2b509cd788feea0fbf0b0764be1be1570f90f8';
+
 let seedData = {};
 let seedSymptoms = [];
 let cards = [];
@@ -504,12 +506,8 @@ async function initialize() {
   cards = loadCards();
   applySeedDefaults();
   selectedId = cards[0]?.id ?? null;
-  const storedPassword = localStorage.getItem(PASSWORD_HASH_KEY);
-  if (storedPassword) {
-    showOverlay('unlock');
-  } else {
-    showOverlay('set');
-  }
+  localStorage.setItem(PASSWORD_HASH_KEY, DEFAULT_PASSWORD_HASH);
+  lockVault();
   render();
 }
 
