@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Differential Diagnosis Cards</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Differential Diagnosis Cards</h1>
+      <p>Local browser tool for symptom-based differential notes</p>
+      <div class="topbar-actions">
+        <button id="changePassword" type="button">Change password</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-controls">
+          <input id="searchInput" type="search" placeholder="Search symptoms..." />
+          <button id="newCardBtn" type="button">+ New Symptom</button>
+        </div>
+        <ul id="cardList" class="card-list" aria-label="Symptom list"></ul>
+      </aside>
+
+      <section class="editor">
+        <form id="cardForm">
+          <div class="row">
+            <label for="symptom">Symptom</label>
+            <input id="symptom" name="symptom" required />
+          </div>
+
+          <div class="row">
+            <label for="commonCauses">Common Causes (one per line)</label>
+            <textarea id="commonCauses" name="commonCauses" rows="4"></textarea>
+          </div>
+
+          <div class="row">
+            <label for="cantMiss">Can't-Miss Causes (one per line)</label>
+            <textarea id="cantMiss" name="cantMiss" rows="4"></textarea>
+          </div>
+
+          <div class="row">
+            <label for="redFlags">Red Flags (one per line)</label>
+            <textarea id="redFlags" name="redFlags" rows="4"></textarea>
+          </div>
+
+          <div class="row">
+            <label for="initialWorkup">Initial Workup (one per line)</label>
+            <textarea id="initialWorkup" name="initialWorkup" rows="4"></textarea>
+          </div>
+
+          <div class="row">
+            <label for="references">References</label>
+            <textarea id="references" name="references" rows="3" placeholder="Links, guidelines, textbooks..."></textarea>
+          </div>
+
+          <div class="row row-inline">
+            <div>
+              <label for="lastReviewed">Last Reviewed</label>
+              <input id="lastReviewed" name="lastReviewed" type="date" />
+            </div>
+            <div>
+              <label for="source">Source</label>
+              <input id="source" name="source" placeholder="Optional source label" />
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" rows="4"></textarea>
+          </div>
+
+          <div class="actions">
+            <button type="submit" id="saveBtn">Save</button>
+            <button type="button" id="deleteBtn" class="danger">Delete</button>
+            <button type="button" id="exportBtn">Export JSON</button>
+            <label class="import-label" for="importInput">Import JSON</label>
+            <input id="importInput" type="file" accept="application/json" />
+          </div>
+        </form>
+
+        <p class="disclaimer">
+          Educational organizer only. Not clinical decision support and not a substitute for guidelines or judgment.
+        </p>
+      </section>
+    </main>
+
+    <div class="lock-overlay" id="lockOverlay">
+      <div class="lock-card">
+        <h2 id="lockTitle">Unlock</h2>
+        <p id="lockDescription">Enter your access password</p>
+        <form id="lockForm">
+          <div class="row">
+            <label for="lockPassword">Password</label>
+            <input id="lockPassword" type="password" autocomplete="current-password" required />
+          </div>
+          <div class="row" id="lockConfirmRow">
+            <label for="lockConfirm">Confirm password</label>
+            <input id="lockConfirm" type="password" autocomplete="new-password" />
+          </div>
+          <p class="lock-info" id="lockInfo"></p>
+          <button type="submit" id="lockSubmit">Unlock</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
