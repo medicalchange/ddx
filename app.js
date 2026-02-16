@@ -108,6 +108,27 @@ let selectedId = null;
 let overlayMode = 'unlock';
 let isUnlocked = false;
 
+function splitSeedList(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return parsed;
+      if (typeof parsed === 'string') {
+        return parsed.split('\n').map((item) => item.trim()).filter(Boolean);
+      }
+    } catch (error) {
+      const normalized = value
+        .split(/,\s*/g)
+        .map((item) => item.trim())
+        .filter(Boolean);
+      if (normalized.length) return normalized;
+    }
+  }
+  return [];
+}
+
 function serializeSeedList(list) {
   if (!Array.isArray(list)) return '';
   return list.join('\n');
@@ -136,8 +157,8 @@ async function fetchSeedData() {
 function mapSeed(symptom) {
   const seed = seedData[symptom] || {};
   return {
-    commonCauses: serializeSeedList(seed.common),
-    cantMiss: serializeSeedList(seed.cantMiss),
+    commonCauses: serializeSeedList(splitSeedList(seed.common)),
+    cantMiss: serializeSeedList(splitSeedList(seed.cantMiss)),
     source: seed.source || 'University of Toronto Diagnostic Checklist'
   };
 }
@@ -156,6 +177,29 @@ function newCard(symptom = '') {
     lastReviewed: '',
     source
   };
+}
+
+function applySeedDefaults() {
+  let changed = false;
+  cards.forEach((card) => {
+    if (!card.symptom) return;
+    const seed = seedData[card.symptom];
+    if (!seed) return;
+    const common = serializeSeedList(splitSeedList(seed.common));
+    const missing = serializeSeedList(splitSeedList(seed.cantMiss));
+    if (!card.commonCauses && common) {
+      card.commonCauses = common;
+      changed = true;
+    }
+    if (!card.cantMiss && missing) {
+      card.cantMiss = missing;
+      changed = true;
+    }
+    if (!card.source || card.source === 'University of Toronto Diagnostic Checklist') {
+      card.source = seed.source || 'University of Toronto Diagnostic Checklist';
+    }
+  });
+  if (changed) persist(cards);
 }
 
 function persist(newCards) {
@@ -420,6 +464,7 @@ refs.changePassword.addEventListener('click', () => {
 async function initialize() {
   await fetchSeedData();
   cards = loadCards();
+  applySeedDefaults();
   selectedId = cards[0]?.id ?? null;
   const storedPassword = localStorage.getItem(PASSWORD_HASH_KEY);
   if (storedPassword) {
