@@ -18,23 +18,8 @@ A beginner-friendly local web app for storing symptom-based differential diagnos
 - Local-only storage in browser `localStorage`
 - Export/import your data as JSON
 
-## Run on Mac
 
-1. Open Terminal.
-2. Go to the project folder:
-   ```bash
-   cd "/Users/aaharris/Desktop/CODEX/what can you do"
-   ```
-3. Start a local server:
-   ```bash
-   python3 -m http.server 8000
-   ```
-4. Open in browser:
-   [http://localhost:8000](http://localhost:8000)
 
 ## Notes
 
 - This is an educational organizer, not clinical decision support.
-- The first visit asks you to set a password before you can edit cards; unlock the overlay to continue anytime.
-- Use the `Change password` button (top right) once you are unlocked to update your password later.
-- Data stays in your browser unless you export it.
