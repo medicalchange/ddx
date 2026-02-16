@@ -150,6 +150,12 @@ textarea {
   background: var(--card);
 }
 
+.expanded-list {
+  min-height: 230px;
+  line-height: 1.4;
+  resize: vertical;
+}
+
 button,
 .import-label {
   border: 1px solid var(--line);
