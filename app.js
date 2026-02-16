@@ -97,9 +97,6 @@ const refs = {
 };
 
 refs.changePassword.disabled = true;
-if (refs.overlay) {
-  refs.overlay.hidden = true;
-}
 
 let seedData = {};
 let seedSymptoms = [];
@@ -385,19 +382,11 @@ function showOverlay(mode) {
   refs.overlayInfo.textContent = '';
   refs.overlayPassword.value = '';
   refs.overlayConfirm.value = '';
-  refs.overlay.hidden = false;
   refs.overlay.classList.add('active');
-  document.body.classList.add('locked');
 }
 
 function hideOverlay() {
   refs.overlay.classList.remove('active');
-  document.body.classList.remove('locked');
-  setTimeout(() => {
-    if (!refs.overlay.classList.contains('active')) {
-      refs.overlay.hidden = true;
-    }
-  }, 250);
 }
 
 function showLockMessage(message, isError = false) {

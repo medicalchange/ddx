@@ -54,31 +54,39 @@ body {
   font-size: 0.95rem;
 }
 
-body.locked {
-  overflow: hidden;
-}
-
 .lock-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(31, 42, 42, 0.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
   z-index: 25;
-  padding: 1rem;
+  width: min(360px, 100%);
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
 
-.lock-overlay.active {
-  display: flex;
+.lock-overlay .lock-card {
+  border-radius: 18px;
+  box-shadow: 0 15px 30px rgba(7, 11, 11, 0.35);
+}
+
+.lock-overlay.active .lock-card {
+  pointer-events: auto;
 }
 
 .lock-card {
   background: rgba(255, 253, 248, 0.98);
   padding: 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(7, 11, 11, 0.45);
-  width: min(420px, 100%);
+  width: 100%;
+  pointer-events: auto;
+}
+
+.lock-overlay.active {
+  opacity: 1;
 }
 
 .lock-card h2 {
