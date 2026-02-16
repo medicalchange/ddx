@@ -162,9 +162,8 @@ function mapSeed(symptom) {
   const doNotMissList = splitSeedList(seed.doNotMiss ?? seed.cantMiss);
   const commonlyMissedList = splitSeedList(seed.commonlyMissed);
   return {
-    commonCauses: serializeSeedList(frequencyList),
-    cantMiss: serializeSeedList(doNotMissList),
-    source: seed.source || 'University of Toronto Diagnostic Checklist',
+    commonCauses: '',
+    cantMiss: '',
     frequencyList,
     doNotMissList,
     commonlyMissedList
@@ -172,7 +171,7 @@ function mapSeed(symptom) {
 }
 
 function newCard(symptom = '') {
-  const { commonCauses, cantMiss, source, frequencyList, doNotMissList, commonlyMissedList } = mapSeed(symptom);
+  const { commonCauses, cantMiss, frequencyList, doNotMissList, commonlyMissedList } = mapSeed(symptom);
   return {
     id: crypto.randomUUID(),
     symptom,
@@ -183,7 +182,6 @@ function newCard(symptom = '') {
     references: '',
     notes: '',
     lastReviewed: '',
-    source,
     frequencyList,
     doNotMissList,
     commonlyMissedList
@@ -201,16 +199,13 @@ function applySeedDefaults() {
     const commonlyMissedList = splitSeedList(seed.commonlyMissed);
     const common = serializeSeedList(frequencyList);
     const missing = serializeSeedList(doNotMissList);
-    if (!card.commonCauses && common) {
-      card.commonCauses = common;
+    if (common && card.commonCauses === common) {
+      card.commonCauses = '';
       changed = true;
     }
-    if (!card.cantMiss && missing) {
-      card.cantMiss = missing;
+    if (missing && card.cantMiss === missing) {
+      card.cantMiss = '';
       changed = true;
-    }
-    if (!card.source || card.source === 'University of Toronto Diagnostic Checklist') {
-      card.source = seed.source || 'University of Toronto Diagnostic Checklist';
     }
     if (!Array.isArray(card.frequencyList) || !card.frequencyList.length) {
       card.frequencyList = frequencyList.slice();
@@ -290,7 +285,6 @@ function fillForm() {
   refs.cardForm.references.value = card.references;
   refs.cardForm.notes.value = card.notes;
   refs.cardForm.lastReviewed.value = card.lastReviewed;
-  refs.cardForm.source.value = card.source;
 }
 
 function render() {
@@ -352,7 +346,6 @@ refs.cardForm.addEventListener('submit', (event) => {
   card.references = refs.cardForm.references.value.trim();
   card.notes = refs.cardForm.notes.value.trim();
   card.lastReviewed = refs.cardForm.lastReviewed.value;
-  card.source = refs.cardForm.source.value.trim();
   persist(cards);
   render();
 });
@@ -399,8 +392,7 @@ refs.importInput.addEventListener('change', async (event) => {
         initialWorkup: String(item.initialWorkup ?? ''),
         references: String(item.references ?? ''),
         notes: String(item.notes ?? ''),
-        lastReviewed: String(item.lastReviewed ?? ''),
-        source: String(item.source ?? '')
+        lastReviewed: String(item.lastReviewed ?? '')
       }));
     selectedId = cards[0]?.id ?? null;
     persist(cards);

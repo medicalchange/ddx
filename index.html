@@ -31,6 +31,32 @@
             <input id="symptom" name="symptom" required />
           </div>
 
+          <div class="row lists-row">
+            <article class="seed-col">
+              <header>
+                <h3>Frequency</h3>
+                <p>Diagnoses sorted by frequency.</p>
+              </header>
+              <ul id="frequencyList" class="seed-list"></ul>
+            </article>
+
+            <article class="seed-col">
+              <header>
+                <h3>Do Not Miss</h3>
+                <p>High-risk diagnoses tagged by U of T.</p>
+              </header>
+              <ul id="doNotMissList" class="seed-list"></ul>
+            </article>
+
+            <article class="seed-col">
+              <header>
+                <h3>Commonly Missed</h3>
+                <p>Nod to what’s often overlooked.</p>
+              </header>
+              <ul id="commonlyMissedList" class="seed-list"></ul>
+            </article>
+          </div>
+
           <div class="row">
             <label for="commonCauses">Common Causes (one per line)</label>
             <textarea class="expanded-list" id="commonCauses" name="commonCauses" rows="4"></textarea>
@@ -56,46 +82,14 @@
             <textarea id="references" name="references" rows="3" placeholder="Links, guidelines, textbooks..."></textarea>
           </div>
 
-          <div class="row row-inline">
-            <div>
-              <label for="lastReviewed">Last Reviewed</label>
-              <input id="lastReviewed" name="lastReviewed" type="date" />
-            </div>
-            <div>
-              <label for="source">Source</label>
-              <input id="source" name="source" placeholder="Optional source label" />
-            </div>
+          <div class="row">
+            <label for="lastReviewed">Last Reviewed</label>
+            <input id="lastReviewed" name="lastReviewed" type="date" />
           </div>
 
           <div class="row">
             <label for="notes">Notes</label>
             <textarea id="notes" name="notes" rows="4"></textarea>
-          </div>
-
-          <div class="row lists-row">
-            <article class="seed-col">
-              <header>
-                <h3>Frequency</h3>
-                <p>Diagnoses sorted by frequency.</p>
-              </header>
-              <ul id="frequencyList" class="seed-list"></ul>
-            </article>
-
-            <article class="seed-col">
-              <header>
-                <h3>Do Not Miss</h3>
-                <p>High-risk diagnoses tagged by U of T.</p>
-              </header>
-              <ul id="doNotMissList" class="seed-list"></ul>
-            </article>
-
-            <article class="seed-col">
-              <header>
-                <h3>Commonly Missed</h3>
-                <p>Nod to what’s often overlooked.</p>
-              </header>
-              <ul id="commonlyMissedList" class="seed-list"></ul>
-            </article>
           </div>
 
           <div class="actions">
